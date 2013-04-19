@@ -1,0 +1,42 @@
+.container {
+	background-color: #eee;
+}
+
+.row,
+.row-fluid,
+.span1,
+.span2,
+.span3,
+.span4,
+.span5,
+.span6,
+.span7,
+.span8,
+.span9,
+.span10,
+.span11,
+.span12 {
+	height: 40px;
+	outline: 1px solid black;
+}
+
+.span1,
+.span2,
+.span3,
+.span4,
+.span5,
+.span6,
+.span7,
+.span8,
+.span9,
+.span10,
+.span11,
+.span12 {
+	background-color: #ddd;
+}
+
+.row,
+.row-fluid {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}

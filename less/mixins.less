@@ -1,0 +1,159 @@
+//
+// Mixins
+// ----------------------------------------------------
+
+// UITILITY MIXINS
+// ----------------------------------------------------
+
+// Clearfix
+// --------
+// For clearing floats like a boss h5bp.com/q
+.clearfix {
+	*zoom: 1;
+	&:before,
+	&:after {
+		display: table;
+		content: "";
+		// Fixes Opera/contenteditable bug:
+		// http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952;
+		line-height: 0;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+// Webkit-style focus
+//-------------------
+.tab-focus() {
+  // Default
+  outline: thin dotted #333;
+  // Webkit
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+
+
+// CSS3 PROPERTIES
+// ----------------------------------------------------
+
+// Box sizing
+.box-sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+
+// COMPONENT MIXINS
+// ---------------------------------------------------
+
+
+// Grid System
+// -----------
+
+// Centered container element
+.container-fixed () {
+	margin-right: auto;
+	margin-left: auto;
+	.clearfix();
+}
+
+// The Grid
+#grid {
+	.core (@gridColumnWidth, @gridGutterWidth) {
+
+		// This is a recursive function to generate span$ class
+		.spanX (@index) when (@index > 0) {
+			// .span@{index} { .span(@index); } // less 1.4.0
+			(~".span@{index}") { .span(@index); } // less 1.3.0
+			.spanX(@index - 1);
+		}
+		.spanX (0) {}
+
+		// This is a recursive function to generate offset$ class
+		.offsetX (@index) when (@index > 0) {
+			// .offset@{index} { .offset(@index); } // less 1.4.0
+			(~".offset@{index}") { .offset(@index); } // less 1.3.0
+			.offsetX(@index - 1);
+		}
+		.offsetX (0) {}
+
+		.offset (@columns) {
+			margin-left: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns + 1));
+		}
+
+		.span (@columns) {
+			width: (@gridColumnWidth * @columns) + (@gridGutterWidth * (@columns - 1));
+		}
+
+		.row {
+			margin-left:  @gridGutterWidth * -1;
+			.clearfix();
+		}
+
+		[class*="span"] {
+			float: left;
+			min-height: 1px; // prevent collapsing columns
+			margin-left: @gridGutterWidth;
+		}
+
+		// Set the container width
+		.container {
+			.span(@gridColumns);
+		}
+
+		// Generate .spanX and .offsetX
+		.spanX(@gridColumns);
+		.offsetX(@gridColumns)
+	}
+
+	.fluid (@fluidGridColumnWidth, @fluidGridGutterWidth) {
+
+		.spanX (@index) when (@index > 0) {
+			(~".span@{index}") { .span(@index); }
+			.spanX(@index - 1);
+		}
+		.spanX (0) {}
+
+		.offsetX (@index) when (@index > 0) {
+			(~".offset@{index}") { .offset(@index); }
+			(~".offset@{index}:first-child") { .offsetFirstChild(@index); }
+			.offsetX(@index - 1);
+		}
+		.offsetX (0) {}
+
+		.offset (@columns) {
+			margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) + (@fluidGridGutterWidth*2);
+			*margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridRowWidth * 100 * 1%) + (@fluidGridGutterWidth*2) - (.5 / @gridRowWidth * 100 * 1%);
+		}
+
+		.offsetFirstChild (@columns) {
+			margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) + (@fluidGridGutterWidth);
+			*margin-left: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridRowWidth * 100 * 1%) + @fluidGridGutterWidth - (.5 / @gridRowWidth * 100 * 1%);
+    	}
+
+    	.span (@columns) {
+    		width: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1));
+    		*width: (@fluidGridColumnWidth * @columns) + (@fluidGridGutterWidth * (@columns - 1)) - (.5 / @gridRowWidth * 100 * 1%);
+    	}
+
+    	.row-fluid {
+    		width: 100%;
+    		.clearfix();
+    		[class*="span"] {
+    			// .input-block-level();
+    			float: left;
+    			margin-left: @fluidGridGutterWidth;
+    			*margin-left: @fluidGridGutterWidth - (.5 / @gridRowWidth * 100 * 1%);
+    		}
+    		[class*="span"]:first-child {
+    			margin-left: 0;
+    		}
+
+			// generate .spanX and .offsetX
+    		.spanX(@gridColumns);
+    		.offsetX(@gridColumns)
+    	}
+	}
+}
